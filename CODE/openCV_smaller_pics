@@ -1,7 +1,6 @@
 # %%
 import sys
 !pip install --upgrade pip
-
 import cv2
 !pip install tqdm
 from tqdm import tqdm
