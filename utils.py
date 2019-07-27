@@ -1,21 +1,13 @@
-def deep_data_aug(image,xmin,ymin,xmax,ymax):
+def deep_data_aug(image,bb_list):
     import imgaug as ia
     import imgaug.augmenters as iaa
     from imgaug.augmentables.bbs import BoundingBox, BoundingBoxesOnImage
-    
-    
-    # =============================================================================
-    # image = ia.quokka(size=(256, 256))
-    # bbs = BoundingBoxesOnImage([
-    #     BoundingBox(x1=65, y1=100, x2=200, y2=150),
-    #     BoundingBox(x1=150, y1=80, x2=200, y2=130)
-    # ], shape=image.shape)
-    # 
-    # =============================================================================
-    
-    #image = 
+   
     bbs = BoundingBoxesOnImage([
-        BoundingBox(x1=xmin, y1=ymin, x2=xmax, y2=ymax),
+        BoundingBox(x1=bb_list[0][0], 
+                    y1=bb_list[0][1], 
+                    x2=bb_list[1][0], 
+                    y2=bb_list[1][1]),
     ], shape=image.shape)
     
     
@@ -28,4 +20,8 @@ def deep_data_aug(image,xmin,ymin,xmax,ymax):
         ], random_order=True))
     # Augment BBs and images.
     image_aug, bbs_aug = seq(image=image, bounding_boxes=bbs)
-    return image_aug,bbs_aug
+    formated_bbs_aug = [[bbs_aug.bounding_boxes[0].x1,
+                        bbs_aug.bounding_boxes[0].y1,
+                        bbs_aug.bounding_boxes[0].x2,
+                        bbs_aug.bounding_boxes[0].y2]]
+    return image_aug,formated_bbs_aug
