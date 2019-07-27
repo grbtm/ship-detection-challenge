@@ -3,16 +3,14 @@ import math
 import numpy as np
 
 
-
 class SlidingWindow():
 
-    def return_sub_figures(image_path):
-        """
-        :param image_path: [Str] path to image
-        :return: image_list: [Lst[numpy.ndarray]] containing subfigures
-        """
+    def return_sub_figures(img):
+        """ Convert an image to a list of subfigures
 
-        img = cv2.imread(image_path)
+        :param image: [numpy.ndarray] image
+        :return: [numpy.ndarray] containing subfigures
+        """
 
         image_width = float(img.shape[1])
         image_height = float(img.shape[0])
@@ -31,10 +29,9 @@ class SlidingWindow():
 
         for j in np.arange(0, y_number_windows):
             for i in np.arange(0, x_number_windows):
-                x = i*overlap_x
-                y = j*overlap_y
-                sub_figure = img[y:y+y_size, x:x+x_size]
+                x = i * overlap_x
+                y = j * overlap_y
+                sub_figure = img[y:y + y_size, x:x + x_size]
                 image_list.append(sub_figure)
 
-
-        return image_list
+        return np.array(image_list)
