@@ -3,5 +3,5 @@ numpy
 pandas
 matplotlib
 sklearn
-tensorflow
+tensorflow-gpu
 
