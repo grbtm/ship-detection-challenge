@@ -1,37 +1,35 @@
-import cv2
 import math
 import numpy as np
 
 
 class SlidingWindow():
 
-    def return_sub_figures(img):
+    def return_sub_figures(img, subfig_width=200, subfig_height=200, overlap_percentage=0.5):
         """ Convert an image to a list of subfigures
 
-        :param image: [numpy.ndarray] image
+        :param img: [numpy.ndarray] image
+        :param subfig_width: [int] representing width of subfigures
+        :param subfig_height: [int] representing height of subfigures
         :return: [numpy.ndarray] containing subfigures
         """
 
         image_width = float(img.shape[1])
         image_height = float(img.shape[0])
 
-        y_size = 200
-        x_size = 200
-        overlap = 0.5 * x_size
-        x_number_windows = round(image_width / overlap)
+        overlap = overlap_percentage * subfig_width
+        number_subfigs_along_width = round(image_width / overlap)
+        number_subfigs_along_height = round(image_height / overlap)
 
-        y_number_windows = round(image_height / overlap)
-
-        overlap_x = math.floor((image_width - x_size) / x_number_windows)
-        overlap_y = math.floor((image_height - y_size) / y_number_windows)
+        overlap_along_width = math.floor((image_width - subfig_width) / number_subfigs_along_width)
+        overlap_along_height = math.floor((image_height - subfig_height) / number_subfigs_along_height)
 
         image_list = list()
 
-        for j in np.arange(0, y_number_windows):
-            for i in np.arange(0, x_number_windows):
-                x = i * overlap_x
-                y = j * overlap_y
-                sub_figure = img[y:y + y_size, x:x + x_size]
+        for index_height in np.arange(0, number_subfigs_along_height):
+            for index_width in np.arange(0, number_subfigs_along_width):
+                width = index_width * overlap_along_width
+                height = index_height * overlap_along_height
+                sub_figure = img[height:height + subfig_height, width:width + subfig_width]
                 image_list.append(sub_figure)
 
         return np.array(image_list)

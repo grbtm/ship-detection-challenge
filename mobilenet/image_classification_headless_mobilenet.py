@@ -5,7 +5,7 @@
 
 
 get_ipython().system('pip install -U tensorflow_hub')
-get_ipython().system('pip install tf-nightly-gpu')
+get_ipython().system('pip install tensorflow-gpu==1.14.0')
 
 
 # In[2]:
@@ -17,24 +17,41 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # In[3]:
 
 
-import matplotlib.pylab as plt
 import tensorflow as tf
 tf.enable_eager_execution()
 import tensorflow_hub as hub
 from tensorflow.keras import layers
+
+
+# In[4]:
+
+
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+config.gpu_options.per_process_gpu_memory_fraction = 0.1
+session = tf.Session(config=config)
+import tensorflow.keras.backend as K
+K.set_session(session=session)
+
+
+# In[5]:
+
+
+import matplotlib.pylab as plt
 import numpy as np
 import PIL.Image as Image
 import time
 import os
 
 
-# In[4]:
+# In[6]:
 
 
-os.environ['DATA_PATH'] = '/home/badc0ded/notebooks/data'
+#os.environ['DATA_PATH'] = '/home/badc0ded/notebooks/data'
+os.environ['DATA_PATH'] = '/notebooks/data/datasets/pipistrel/Hackathon/SingleFrame_ObjectProposalClassification'
 
 
-# In[5]:
+# In[8]:
 
 
 DATA_PATH = os.environ.get('DATA_PATH')
@@ -42,7 +59,7 @@ DATA_PATH = os.environ.get('DATA_PATH')
 IMAGE_SHAPE = (224, 224)
 
 
-# In[6]:
+# In[9]:
 
 
 class CollectBatchStats(tf.keras.callbacks.Callback):
@@ -77,7 +94,7 @@ def plot_predicted_batch(image_batch, label_batch, predicted_batch):
   _ = plt.suptitle("Model predictions (green: correct, red: incorrect)")
 
 
-# In[7]:
+# In[10]:
 
 
 train_data_root = os.path.join(DATA_PATH, "train")
@@ -85,7 +102,7 @@ train_image_data = read_data(train_data_root)
 train_image_batch, train_label_batch = train_image_data[0]
 
 
-# In[8]:
+# In[11]:
 
 
 feature_extractor_url = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/2" #@param {type:"string"}
@@ -95,7 +112,7 @@ feature_extractor_layer(train_image_batch)
 feature_extractor_layer.trainable = False
 
 
-# In[9]:
+# In[12]:
 
 
 model = tf.keras.Sequential([
@@ -106,7 +123,7 @@ model = tf.keras.Sequential([
 model.summary()
 
 
-# In[10]:
+# In[ ]:
 
 
 predictions = model(train_image_batch)
@@ -124,7 +141,7 @@ history = model.fit(train_image_data, epochs=2,
                     callbacks=[batch_stats_callback])
 
 
-# In[11]:
+# In[ ]:
 
 
 plt.figure()
@@ -140,7 +157,7 @@ plt.ylim([0,1])
 plt.plot(batch_stats_callback.batch_acc)
 
 
-# In[12]:
+# In[ ]:
 
 
 class_names = sorted(train_image_data.class_indices.items(), key=lambda pair: pair[1])
@@ -148,14 +165,14 @@ class_names = np.array([key.title() for key, value in class_names])
 print(class_names)
 
 
-# In[13]:
+# In[ ]:
 
 
 predicted_batch = model.predict(train_image_batch)
 plot_predicted_batch(train_image_batch, train_label_batch, predicted_batch)
 
 
-# In[14]:
+# In[ ]:
 
 
 t = time.time()
@@ -166,7 +183,7 @@ tf.keras.experimental.export_saved_model(model, export_path)
 print(export_path)
 
 
-# In[15]:
+# In[ ]:
 
 
 reloaded = tf.keras.experimental.load_from_saved_model(export_path,
@@ -178,7 +195,7 @@ reloaded_result_batch = reloaded.predict(train_image_batch)
 print(abs(reloaded_result_batch - result_batch).max())
 
 
-# In[21]:
+# In[ ]:
 
 
 test_data_root = os.path.join(DATA_PATH, "test")
@@ -189,7 +206,7 @@ test_loss, test_acc = model.evaluate(test_image_data)
 print('Test accuracy: {}'.format(test_acc))
 
 
-# In[20]:
+# In[ ]:
 
 
 test_image_batch, test_label_batch = test_image_data[2]
