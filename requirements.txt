@@ -4,4 +4,4 @@ pandas
 matplotlib
 sklearn
 tensorflow-gpu
-
+keras
