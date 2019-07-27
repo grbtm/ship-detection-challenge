@@ -13,3 +13,19 @@ We are divided into following teams. Of course these are not final, please creat
 
 
 
+
+### To install required libraries
+
+```buildoutcfg
+pip install -r requirements.txt 
+```
+
+### To create a virtual environment and activate it
+```buildoutcfg
+sudo apt-get install python3-venv
+python -m venv deepberlinai_env
+activate deepberlin_ai_env/bin/activate
+pip install -r requirements.txt 
+```
+
+
