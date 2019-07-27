@@ -1,0 +1,38 @@
+# %%
+import sys
+!pip install --upgrade pip
+import cv2
+!pip install tqdm
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+%matplotlib inline
+# %%
+from itertools import islice
+# %%
+from pathlib import  Path
+
+big_images_path = Path('../Hackathon_data/RAW_DATA/')
+# %%
+# images = list(map(lambda x: x.as_posix(), (x for x in pip_images_path.glob('*.jpg'))))
+images = [x for x in big_images_path.glob('*.jpg')]
+images[:10]
+# %%
+# Number of images
+len(images)
+# %%
+dest_path = Path('../Hackathon_data/RAW_DATA/scaled-500/')
+dest_path
+# %%
+#%%time
+for image in tqdm(images):  #  islice(images, 1):
+    img = cv2.imread(image.as_posix())
+    scale_percent = 20 # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+#     resized = cv2.resize(img, (500,))
+#     plt.imshow(resized)
+    cv2.imwrite((dest_path_original / image.name).as_posix(), resized)
+# %%
