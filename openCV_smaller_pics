@@ -1,6 +1,5 @@
 # %%
 import sys
-!pip install --upgrade pip
 import cv2
 !pip install tqdm
 from tqdm import tqdm
@@ -9,9 +8,11 @@ import matplotlib.pyplot as plt
 # %%
 from itertools import islice
 # %%
-from pathlib import  Path
+from pathlib import Path
 
-big_images_path = Path('../Hackathon_data/RAW_DATA/')
+
+
+big_images_path = Path('/Users/marchan/Documents/GitHub/Hackathons/Hackathon_DeepBerlin_07_19/ship-detection-challenge/Hackathon_data/RAW_DATA')
 # %%
 # images = list(map(lambda x: x.as_posix(), (x for x in pip_images_path.glob('*.jpg'))))
 images = [x for x in big_images_path.glob('*.jpg')]
@@ -20,7 +21,7 @@ images[:10]
 # Number of images
 len(images)
 # %%
-dest_path = Path('../Hackathon_data/RAW_DATA/scaled-500/')
+dest_path = Path('/Users/marchan/Documents/GitHub/Hackathons/Hackathon_DeepBerlin_07_19/ship-detection-challenge/Hackathon_data/RAW_DATA_scaled-500')
 dest_path
 # %%
 #%%time
@@ -34,5 +35,5 @@ for image in tqdm(images):  #  islice(images, 1):
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 #     resized = cv2.resize(img, (500,))
 #     plt.imshow(resized)
-    cv2.imwrite((dest_path_original / image.name).as_posix(), resized)
+    cv2.imwrite((dest_path / image.name).as_posix(), resized)
 # %%
