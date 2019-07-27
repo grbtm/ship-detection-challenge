@@ -1,5 +1,5 @@
 # %%
-!pip install opencv-python
+!pip install --version atom
 import sys
 import cv2
 from tqdm import tqdm
