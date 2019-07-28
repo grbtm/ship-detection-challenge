@@ -24,11 +24,11 @@ def get_bounding_boxes_of_all_images(csv_path):
 def image_and_bounding_boxes_generator(csv_path, images_path):
     bounding_boxes_of_images_dict = get_bounding_boxes_of_all_images(csv_path)
     for image_name in bounding_boxes_of_images_dict:
-        try:
-            image = cv2.imread(os.path.join(images_path, image_name))
-        except:
-            print("Filename: {name} not found in directory: {path}!".format(name=image_name, path=images_path))
 
+        image = cv2.imread(os.path.join(images_path, image_name))
+        if image is None:
+            print("Filename: {name} not found in directory: {path}!".format(name=image_name, path=images_path))
+            continue
         bbox_list = bounding_boxes_of_images_dict[image_name]
         yield image, bbox_list
 
