@@ -2,10 +2,16 @@
 # coding: utf-8
 
 # In[1]:
-
+import os
+ENVIRONMENT=os.environ.get('ENVIRONMENT')
 
 get_ipython().system('pip install -U tensorflow_hub')
-get_ipython().system('pip install tensorflow-gpu==1.14.0')
+if ENVIRONMENT == 'DGX':
+  get_ipython().system('pip install -U tensorflow_hub==0.5.0')
+  get_ipython().system('pip install tensorflow-gpu==1.14.0')
+else:
+  get_ipython().system('pip install -U tensorflow_hub')
+  get_ipython().system('pip install tf-nightly-gpu')
 
 
 # In[2]:
@@ -26,12 +32,13 @@ from tensorflow.keras import layers
 # In[4]:
 
 
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
-config.gpu_options.per_process_gpu_memory_fraction = 0.1
-session = tf.Session(config=config)
-import tensorflow.keras.backend as K
-K.set_session(session=session)
+if ENVIRONMENT == 'DGX':
+  config = tf.ConfigProto()
+  config.gpu_options.allow_growth = True
+  config.gpu_options.per_process_gpu_memory_fraction = 0.1
+  session = tf.Session(config=config)
+  import tensorflow.keras.backend as K
+  K.set_session(session=session)
 
 
 # In[5]:
@@ -46,10 +53,10 @@ import os
 
 # In[6]:
 
-
-#os.environ['DATA_PATH'] = '/home/badc0ded/notebooks/data'
-os.environ['DATA_PATH'] = '/notebooks/data/datasets/pipistrel/Hackathon/SingleFrame_ObjectProposalClassification'
-
+if ENVIRONMENT == 'DGX':
+  os.environ['DATA_PATH'] = '/notebooks/data/datasets/pipistrel/Hackathon/SingleFrame_ObjectProposalClassification'
+else:
+  os.environ['DATA_PATH'] = '/home/badc0ded/notebooks/data'
 
 # In[8]:
 
@@ -116,7 +123,9 @@ feature_extractor_layer.trainable = False
 
 
 model = tf.keras.Sequential([
+  #layers.Dropout(0.2, input_shape=(224,224,3)),
   feature_extractor_layer,
+  #layers.Dense((train_image_data.num_classes +  1280) / 2, activation = 'relu'),
   layers.Dense(train_image_data.num_classes, activation='softmax')
 ])
 
@@ -162,7 +171,6 @@ plt.plot(batch_stats_callback.batch_acc)
 
 class_names = sorted(train_image_data.class_indices.items(), key=lambda pair: pair[1])
 class_names = np.array([key.title() for key, value in class_names])
-print(class_names)
 
 
 # In[ ]:
@@ -197,6 +205,12 @@ print(abs(reloaded_result_batch - result_batch).max())
 
 # In[ ]:
 
+def eval_model_on_data(model, data_root_short_name):
+    data_root = os.path.join(DATA_PATH, data_root_short_name)
+    image_data = read_data(data_root)
+    loss, acc = model.evaluate(image_data)
+    print('Accuracy: {}'.format(acc))
+    return loss, acc, image_data
 
 test_data_root = os.path.join(DATA_PATH, "test")
 test_image_data = read_data(test_data_root)
@@ -205,13 +219,47 @@ test_loss, test_acc = model.evaluate(test_image_data)
 
 print('Test accuracy: {}'.format(test_acc))
 
+_, _, test_image_data = eval_model_on_data(model, "test")
 
 # In[ ]:
 
 
-test_image_batch, test_label_batch = test_image_data[2]
+
+test_image_batch, test_label_batch = test_image_data.next()
 predicted_batch = model.predict(test_image_batch)
 plot_predicted_batch(test_image_batch, test_label_batch, predicted_batch)
+
+
+# In[20]:
+
+
+get_ipython().system('mkdir -p $DATA_PATH/test_boats/nature')
+get_ipython().system('ln -s ../test/boat $DATA_PATH/test_boats/')
+get_ipython().system('mkdir -p $DATA_PATH/train_boats/nature')
+get_ipython().system('ln -s ../train/boat $DATA_PATH/train_boats/')
+
+
+# In[21]:
+
+
+_, test_boats_acc, test_boats_image_data = eval_model_on_data(model, "test_boats")
+
+
+# In[22]:
+
+
+_, train_boats_acc, train_boats_image_data = eval_model_on_data(model, "train_boats")
+
+
+# In[23]:
+
+
+print('Missed {} out of {} boats in test.zip'.format(
+    int(test_boats_image_data.samples * (1 - test_boats_acc)),
+    test_boats_image_data.samples))
+print('Missed {} out of {} boats in train.zip'.format(
+    int(train_boats_image_data.samples * (1 - train_boats_acc)),
+    train_boats_image_data.samples))
 
 
 # In[ ]:
