@@ -1,6 +1,6 @@
 # Augmentation Examples
 
-For all examples it is necessary to download the Pipstrel data set (https://cloud.hs-augsburg.de/index.php/s/mGHrPeW9WpKCYp5) and labels from the subfolder "SingleFrame_ObjectProposalClassification".
+For all examples it is necessary to download the Pipstrel data set (https://cloud.hs-augsburg.de/index.php/s/mGHrPeW9WpKCYp5) and labels (https://cloud.hs-augsburg.de/index.php/s/YT8jEMieYM4EL5b) from the subfolder "SingleFrame_ObjectProposalClassification".
 
 ## Basic Augmenter
 
