@@ -1,5 +1,22 @@
 import math
 import numpy as np
+import pandas as pd
+
+
+def _get_bounding_boxes(df, img_name):
+    df_of_image = df.loc[df.filename == img_name]
+    df_of_boats = df_of_image[(df_of_image["class"] == "boat") | (df_of_image["class"] == "undefObj")]
+    return df_of_boats[["xmin", "ymin", "xmax", "ymax"]].values.tolist()
+
+
+def get_bounding_boxes_of_all_images(csv_path):
+    df = pd.read_csv(csv_path)
+    all_images = df["filename"].unique()
+    dict_of_bounding_boxes = dict()
+    for image_name in all_images:
+        bbox_list = _get_bounding_boxes(df, image_name)
+        dict_of_bounding_boxes[image_name] = bbox_list
+    return dict_of_bounding_boxes
 
 
 def return_sub_figures(img, subfig_width=200, subfig_height=200, overlap_percentage=0.5):
