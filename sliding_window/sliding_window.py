@@ -1,3 +1,6 @@
+# This bundle of functions is free to use for any non-commercial use. It was developed by Sarah Schroeder and Tomislav
+# Grbesic.
+
 import os
 import cv2
 import math
