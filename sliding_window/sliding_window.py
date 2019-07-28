@@ -1,3 +1,5 @@
+import os
+import cv2
 import math
 import numpy as np
 import pandas as pd
@@ -17,6 +19,18 @@ def get_bounding_boxes_of_all_images(csv_path):
         bbox_list = _get_bounding_boxes(df, image_name)
         dict_of_bounding_boxes[image_name] = bbox_list
     return dict_of_bounding_boxes
+
+
+def image_and_bounding_boxes_generator(csv_path, images_path):
+    bounding_boxes_of_images_dict = get_bounding_boxes_of_all_images(csv_path)
+    for image_name in bounding_boxes_of_images_dict:
+        try:
+            image = cv2.imread(os.path.join(images_path, image_name))
+        except:
+            print("Filename: {name} not found in directory: {path}!".format(name=image_name, path=images_path))
+
+        bbox_list = bounding_boxes_of_images_dict[image_name]
+        yield image, bbox_list
 
 
 def return_sub_figures(img, subfig_width=200, subfig_height=200, overlap_percentage=0.5):
