@@ -12,6 +12,11 @@ def _get_bounding_boxes(df, img_name):
 
 
 def get_bounding_boxes_of_all_images(csv_path):
+    """ Return dictionary that maps each image filename to it's list of bounding boxes
+
+    :param csv_path: [Str] path to csv file including the file name
+    :return dict_of_bounding_boxes: [Dict[Str->[Lst[Lst[int]]]]] that maps image filenames to respective bounding boxes
+    """
     df = pd.read_csv(csv_path)
     all_images = df["filename"].unique()
     dict_of_bounding_boxes = dict()
@@ -22,6 +27,14 @@ def get_bounding_boxes_of_all_images(csv_path):
 
 
 def image_and_bounding_boxes_generator(csv_path, images_path):
+    """ Generator returning one cv2 image and its respective list of boundary boxes
+
+    :param csv_path: [Str] path to csv file including the file name
+    :param images_path: [Str] path to directory containing all images
+    :yield image: [numpy.ndarray] of the image,
+            bbox_list: [Lst[Lst[int]]] list of bounding boxes, each box [Lst[int]] contains the pixels of the bounding
+                            box lines from the upper left corner of the image [xmin, ymin, xmax, ymax]
+    """
     bounding_boxes_of_images_dict = get_bounding_boxes_of_all_images(csv_path)
     for image_name in bounding_boxes_of_images_dict:
 
@@ -70,8 +83,8 @@ def return_sub_figures_with_labels(img, bounding_coords, subfig_width=200, subfi
     """ Convert an image to a list of subfigures
 
     :param img: [numpy.ndarray] image
-    :param bounding_coords: [Lst[Lst[int]]] List of bounding boxes, each box contains the pixels of the bounding
-                            box lines from the upper left corner of the picture (xmin, ymin, xmax, ymax)
+    :param bounding_coords: [Lst[Lst[int]]] List of bounding boxes, each box [Lst[int]] contains the pixels of the
+                            bounding box lines from the upper left corner of the picture [xmin, ymin, xmax, ymax]
     :param subfig_width: [int] width of subfigures
     :param subfig_height: [int] height of subfigures
     :param overlap_percentage: [float] overlap of sliding windows in percentage
