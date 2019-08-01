@@ -1,4 +1,5 @@
 import argparse
+import cv2
 import preprocessing.sliding_window.functions_and_generators as sw
 
 
@@ -23,9 +24,12 @@ if __name__ == '__main__':
     args = parse_args()
     args.train_csv
 
-    generator = sw.image_and_bounding_boxes_generator(csv_path, images_path)
+    generator = sw.image_and_bounding_boxes_generator(args.train_bbox_csv, args.train_img_dir)
     for image_name, image, bbox_list in generator:
         # (np.array(image_list), validation_list) = return_sub_figures_with_labels(img, bounding_coords, subfig_width=200,
         #                                                                         subfig_height=200, overlap_percentage=0.5,
         #                                                                         min_bbox_overlap_percentage=0.25)
         subfigures_array, labels_array =
+        for index, subfigure in enumerate(subfigures_array):
+            fname = image_name + "_" + index
+            cv2.imwrite(fname, subfigure)
