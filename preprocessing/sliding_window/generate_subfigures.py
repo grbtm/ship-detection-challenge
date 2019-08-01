@@ -37,8 +37,8 @@ if __name__ == '__main__':
                                                                            min_bbox_overlap_percentage=0.25)
         for index, subfigure in enumerate(subfigures_array):
             fname = image_name.split('.')[0] + "_" + str(index) + ".jpg"
-            fname = os.path.join(args.train_output_img_dir, fname)
-            cv2.imwrite(fname, subfigure)
+            path = os.path.join(args.train_output_img_dir, fname)
+            cv2.imwrite(path, subfigure)
             dict_for_csv['ImageId'].append(fname)
             dict_for_csv['class'].append(labels_array[index])
 
