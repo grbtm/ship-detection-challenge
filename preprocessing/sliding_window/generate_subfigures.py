@@ -36,7 +36,7 @@ if __name__ == '__main__':
                                                                            subfig_height=200, overlap_percentage=0.5,
                                                                            min_bbox_overlap_percentage=0.25)
         for index, subfigure in enumerate(subfigures_array):
-            fname = image_name + "_" + str(index)
+            fname = image_name.split('.')[0] + "_" + str(index) + ".jpg"
             fname = os.path.join(args.train_output_img_dir, fname)
             cv2.imwrite(fname, subfigure)
             dict_for_csv['ImageId'].append(fname)
