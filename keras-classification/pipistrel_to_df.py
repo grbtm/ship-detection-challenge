@@ -2,8 +2,10 @@ import os
 import pandas as pd
 
 if __name__ == '__main__':
-    pipistrel_folder = '../../data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test'
-    csv_target = '../../workspace/data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test/pipistrel_image_cls.csv'
+    #pipistrel_folder = '../../data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test'
+    pipistrel_folder = '/Users/T/Documents/Programmieren/data/Hackathon/SingleFrame_ObjectProposalClassification/test'
+    #csv_target = '../../workspace/data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test/pipistrel_image_cls.csv'
+    csv_target = '/Users/T/Documents/Programmieren/data/Hackathon/SingleFrame_ObjectProposalClassification/test/pipistrel_image_cls.csv'
     classes = ['nature', 'boat']
 
     dic = {}
