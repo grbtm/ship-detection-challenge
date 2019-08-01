@@ -28,7 +28,7 @@ def get_bounding_boxes_of_all_images(csv_path):
         dict_of_bounding_boxes[image_name] = bbox_list
     return dict_of_bounding_boxes
 
-
+#TODO update docstr
 def image_and_bounding_boxes_generator(csv_path, images_path):
     """ Generator returning one cv2 image and its respective list of boundary boxes
 
@@ -46,9 +46,8 @@ def image_and_bounding_boxes_generator(csv_path, images_path):
             print("Filename: {name} not found in directory: {path}!".format(name=image_name, path=images_path))
             continue
         bbox_list = bounding_boxes_of_images_dict[image_name]
-        yield image, bbox_list
+        yield image_name, image, bbox_list
 
-#TODO write wrapper function to write the subfigers to a dir with a csv containing the labels
 
 def return_sub_figures(img, subfig_width=200, subfig_height=200, overlap_percentage=0.5):
     """ Convert an image to a list of subfigures
