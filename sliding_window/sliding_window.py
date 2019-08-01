@@ -48,6 +48,7 @@ def image_and_bounding_boxes_generator(csv_path, images_path):
         bbox_list = bounding_boxes_of_images_dict[image_name]
         yield image, bbox_list
 
+#TODO write wrapper function to write the subfigers to a dir with a csv containing the labels
 
 def return_sub_figures(img, subfig_width=200, subfig_height=200, overlap_percentage=0.5):
     """ Convert an image to a list of subfigures
