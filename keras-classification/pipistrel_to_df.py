@@ -1,13 +1,20 @@
-import os
+import os, argparse
 import pandas as pd
 
-if __name__ == '__main__':
-    #pipistrel_folder = '../../data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test'
-    pipistrel_folder = '/Users/T/Documents/Programmieren/data/Hackathon/SingleFrame_ObjectProposalClassification/test'
-    #csv_target = '../../workspace/data/searchwing/Hackathon/SingleFrame_ObjectProposalClassification/test/pipistrel_image_cls.csv'
-    csv_target = '/Users/T/Documents/Programmieren/data/Hackathon/SingleFrame_ObjectProposalClassification/test/pipistrel_image_cls.csv'
-    classes = ['nature', 'boat']
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--pipistrel_folder', type=str, required=True)
+    parser.add_argument('--csv_target', type=str, required=True)
+    return parser.parse_args()
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    pipistrel_folder = args.pipistrel_folder
+    csv_target = args.csv_target
+
+    classes = ['nature', 'boat']
     dic = {}
     dic['ImageId'] = []
     dic['class'] = []
